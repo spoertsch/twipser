@@ -1,0 +1,30 @@
+@(messageForm: Form[(String, String)], messages: List[model.Message])
+
+@import helper._
+@import viewhelper.ViewHelper._
+
+@main("twipser") {
+
+	<div class="container">
+		@form(routes.MessageController.create) {
+			@inputText(messageForm("author"), '_label -> Messages("message.author"))
+			@inputText(messageForm("message"), '_label -> Messages("message.message"))	
+			<br />
+			<input class="btn btn-large" type="submit" value="@Messages("message.add")" />	
+		}
+	</div>
+	
+	<div class="page-header">
+	  <h1>@Messages("messages")</h1>
+	</div>
+
+    <div id="all-messages">
+    @for(m <- messages) {
+		<blockquote>
+			<p>@m.message</p>
+			<small>@m.author</small>
+		</blockquote>
+    }
+    </div>
+
+}
