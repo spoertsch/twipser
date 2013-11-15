@@ -14,6 +14,7 @@ import play.api.mvc.WebSocket
 import play.api.libs.iteratee.Iteratee
 import play.api.libs.json.Json
 
+
 object MessageController extends Controller with MongoController {
 
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
@@ -64,4 +65,5 @@ object MessageController extends Controller with MongoController {
 //      }
 //    }, broadcast)
 //  }
+  
 }
