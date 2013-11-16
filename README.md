@@ -13,7 +13,7 @@ In order to run the application you need to have a MongoDB up and running.
 curl --header "Content-type: application/json" --request GET http://localhost:9000/api/messages
 ```
 
-##### Get all messages
+##### Get all messages by an author
 ```bash
 curl --header "Content-type: application/json" --request GET http://localhost:9000/api/messages/Jan
 ```
