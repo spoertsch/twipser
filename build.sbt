@@ -13,3 +13,5 @@ resolvers ++= Seq(
  )
   
 play.Project.playScalaSettings
+
+atmosPlaySettings

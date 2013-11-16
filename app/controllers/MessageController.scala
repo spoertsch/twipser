@@ -13,6 +13,7 @@ import play.api.libs.iteratee.Concurrent
 import play.api.mvc.WebSocket
 import play.api.libs.iteratee.Iteratee
 import play.api.libs.json.Json
+import play.api.Logger
 
 
 object MessageController extends Controller with MongoController {
