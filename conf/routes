@@ -5,7 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 
-GET		/message					controllers.MessageController.createForm
+GET		/messages					controllers.MessageController.createForm
 POST	/message					controllers.MessageController.create
 GET		/api/messages				controllers.api.MessageApi.findAll()
 POST	/api/message				controllers.api.MessageApi.createJson()

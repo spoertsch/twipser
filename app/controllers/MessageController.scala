@@ -28,7 +28,7 @@ object MessageController extends Controller with MongoController {
   def createForm = Action.async {
     implicit request =>
       Message.findAll.map {
-        messages => Ok(views.html.message(messageForm, messages))
+        messages => Ok(views.html.messages(messageForm, messages))
       }
   }
 
@@ -37,14 +37,14 @@ object MessageController extends Controller with MongoController {
       messageForm.bindFromRequest.fold(
         errors => {
           Message.findAll.map {
-            messages => BadRequest(views.html.message(errors, messages))
+            messages => BadRequest(views.html.messages(errors, messages))
           }
         },
         message => {
           val newMessage = Message(message._1, message._2)
           Message.save(newMessage)
           channel.push(Json.toJson(newMessage))
-          Future.successful(Redirect(routes.MessageController.create()))
+          Future.successful(Redirect(routes.MessageController.createForm()))
         })
   }
   
