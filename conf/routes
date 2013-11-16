@@ -7,7 +7,8 @@ GET     /                           controllers.Application.index
 
 GET		/messages					controllers.MessageController.createForm
 POST	/message					controllers.MessageController.create
-GET		/api/messages				controllers.api.MessageApi.findAll()
+GET		/api/messages				controllers.api.MessageApi.findAll
+GET		/api/messages/:author		controllers.api.MessageApi.findAllByAuthor(author)
 POST	/api/message				controllers.api.MessageApi.createJson()
 
 GET     /feed                       controllers.MessageController.feed

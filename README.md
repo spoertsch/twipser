@@ -13,6 +13,11 @@ In order to run the application you need to have a MongoDB up and running.
 curl --header "Content-type: application/json" --request GET http://localhost:9000/api/messages
 ```
 
+##### Get all messages
+```bash
+curl --header "Content-type: application/json" --request GET http://localhost:9000/api/messages/Jan
+```
+
 ##### Create new message
 ```bash
 curl --header "Content-type: application/json" --request POST --data 'author": "Jan", "message": "CURL TEST"}' http://localhost:9000/api/message

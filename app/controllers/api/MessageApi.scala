@@ -8,6 +8,7 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import controllers.MessageController
 import scala.concurrent.ExecutionContext
+import views.html.defaultpages.notFound
 
 object MessageApi extends Controller {
   
@@ -16,6 +17,13 @@ object MessageApi extends Controller {
   def findAll() = Action.async {
     implicit req =>
       Message.findAll.map { messages =>
+          Ok(Json.toJson(messages)).as(JSON)
+      }
+  }
+  
+  def findAllByAuthor(author: String) = Action.async {
+    implicit req =>
+      Message.findAll(Some(author)).map { messages =>
         render {
           case Accepts.Json() => Ok(Json.toJson(messages)).as(JSON)
           //case Accepts.Html() => Ok(views.html.messages(messages))

@@ -6,6 +6,7 @@ import play.modules.reactivemongo.ReactiveMongoPlugin
 import play.api.Play.current
 import reactivemongo.bson._
 import reactivemongo.api.collections.default.BSONCollection
+import scala.concurrent.Future
 
 case class Message(author: String, message: String, id: Option[String] = Some(BSONObjectID.generate.stringify)) 
 
@@ -38,8 +39,14 @@ object Message {
     }
   }
   
-  def findAll = {
-    collection.find(BSONDocument()).sort(BSONDocument("_id" -> -1)).cursor[Message].collect[List]()
+  def findAll: Future[List[Message]] = findAll(None)
+  
+  def findAll(author: Option[String]) = {
+    val query = author match {
+      case Some(author) => BSONDocument("author" -> author)
+      case _ => BSONDocument()
+    }
+    collection.find(query).sort(BSONDocument("_id" -> -1)).cursor[Message].collect[List]()
   }
   
   def save(message: Message) = {
