@@ -1,5 +1,6 @@
 package model
 
+//mmi
 import scala.concurrent.ExecutionContext
 import play.api.libs.json.Json
 import play.modules.reactivemongo.ReactiveMongoPlugin
@@ -12,6 +13,7 @@ case class Message(author: String, message: String, id: Option[String] = Some(BS
 
 object Message {
   
+  // mmd
   def db = ReactiveMongoPlugin.db
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   def collection = db.collection[BSONCollection]("Messages")
@@ -39,8 +41,15 @@ object Message {
     }
   }
   
+  // mfa3
   def findAll: Future[List[Message]] = findAll(None)
   
+  // mfa1
+//  def findAll = {
+//    collection.find(BSONDocument()).sort(BSONDocument("_id" -> -1)).cursor[Message].collect[List]() 
+//  }
+  
+  // mfa2
   def findAll(author: Option[String]) = {
     val query = author match {
       case Some(author) => BSONDocument("author" -> author)
@@ -49,6 +58,7 @@ object Message {
     collection.find(query).sort(BSONDocument("_id" -> -1)).cursor[Message].collect[List]()
   }
   
+  // ms
   def save(message: Message) = {
     collection.insert(message)
   }

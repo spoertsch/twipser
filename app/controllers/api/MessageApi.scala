@@ -12,8 +12,10 @@ import views.html.defaultpages.notFound
 
 object MessageApi extends Controller {
   
+  // ec
   implicit val ec: ExecutionContext =  ExecutionContext.Implicits.global
   
+  // mafa
   def findAll() = Action.async {
     implicit req =>
       Message.findAll.map { messages =>
@@ -21,6 +23,7 @@ object MessageApi extends Controller {
       }
   }
   
+  // mafaba
   def findAllByAuthor(author: String) = Action.async {
     implicit req =>
       Message.findAll(Some(author)).map { messages =>
@@ -31,10 +34,12 @@ object MessageApi extends Controller {
       }
   }
 
+  // mar
   implicit val rds = (
     (__ \ 'author).read[String] and
     (__ \ 'message).read[String]) tupled
 
+  // mac
   def createJson() = Action(parse.json) { request =>
     request.body.validate[(String, String)].map {
       case (author, message) => {

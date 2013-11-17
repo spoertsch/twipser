@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="html_all" deleted="false" description="Input template" enabled="true" name="it">@(elements: helper.FieldElements)
+&lt;div class="control-group @if(elements.hasErrors) {error}"&gt;
+	&lt;label class="control-label" for="@elements.id"&gt;@elements.label&lt;/label&gt;
+	&lt;div class="controls"&gt;
+		@elements.input
+		&lt;span class="errors"&gt;@elements.errors.mkString(",")&lt;/span&gt; 
+	&lt;/div&gt;
+</template><template autoinsert="true" context="html_all" deleted="false" description="messages.js" enabled="true" name="mjs">&lt;script src="@routes.Assets.at("javascripts/messages.js")" type="text/javascript"&gt;&lt;/script&gt;</template><template autoinsert="true" context="html_all" deleted="false" description="messages template - form" enabled="true" name="mtf">&lt;div class="container"&gt;
+		@form(routes.MessageController.create) {
+			@inputText(messageForm("author"), '_label -&gt; Messages("message.author"))
+			@inputText(messageForm("message"), '_label -&gt; Messages("message.message"))	
+			&lt;br /&gt;
+			&lt;input class="btn btn-large" type="submit" value="@Messages("message.add")" /&gt;	
+		}
+	&lt;/div&gt;</template><template autoinsert="true" context="html_all" deleted="false" description="messages template - header" enabled="true" name="mth">&lt;div class="page-header"&gt;
+	  &lt;h1&gt;@Messages("messages")&lt;/h1&gt;
+	&lt;/div&gt;</template><template autoinsert="true" context="html_all" deleted="false" description="messages templates - list" enabled="true" name="mtl">&lt;div id="all-messages"&gt;
+    @for(m &lt;- messages) {
+		&lt;blockquote&gt;
+			&lt;p&gt;@m.message&lt;/p&gt;
+			&lt;small&gt;@m.author&lt;/small&gt;
+		&lt;/blockquote&gt;
+    }
+    &lt;/div&gt;</template></templates>

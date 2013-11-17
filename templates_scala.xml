@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="ExecutionContext definition" enabled="true" name="ec">implicit val ec: ExecutionContext = ExecutionContext.Implicits.global</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageApi - create" enabled="true" name="mac">def createJson() = Action(parse.json) { request =&gt;
+    request.body.validate[(String, String)].map {
+      case (author, message) =&gt; {
+        val newMessage = Message(author, message)
+        Message.save(newMessage)
+        MessageController.channel.push(Json.toJson(newMessage))
+        Ok(Json.toJson(newMessage)).as(JSON)
+      }
+    }.recoverTotal {
+      e =&gt; BadRequest("Detected error:" + JsError.toFlatJson(e))
+    }
+  }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageApi - findAll" enabled="true" name="mafa">def findAll() = Action.async {
+    implicit req =&gt;
+      Message.findAll.map { messages =&gt;
+          Ok(Json.toJson(messages)).as(JSON)
+      }
+  }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageApi - findAllByAuthor" enabled="true" name="mafaba">def findAllByAuthor(author: String) = Action.async {
+    implicit req =&gt;
+      Message.findAll(Some(author)).map { messages =&gt;
+        render {
+          case Accepts.Json() =&gt; Ok(Json.toJson(messages)).as(JSON)
+          //case Accepts.Html() =&gt; Ok(views.html.messages(messages))
+        }
+      }
+  }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageApi - Imports" enabled="true" name="mai">import play.api.mvc.Action
+import play.api.mvc.Controller
+import model.Message
+import play.api.libs.json.Json
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
+import controllers.MessageController
+import scala.concurrent.ExecutionContext
+import views.html.defaultpages.notFound</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageApi - reads" enabled="true" name="mar">implicit val rds = (
+    (__ \ 'author).read[String] and
+    (__ \ 'message).read[String]) tupled</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageController - create" enabled="true" name="mcc">  def create = Action.async {
+    implicit request =&gt;
+      messageForm.bindFromRequest.fold(
+        errors =&gt; {
+          Message.findAll.map {
+            messages =&gt; BadRequest(views.html.messages(errors, messages))
+          }
+        },
+        message =&gt; {
+          val newMessage = Message(message._1, message._2)
+          Message.save(newMessage)
+          Future.successful(Redirect(routes.MessageController.createForm()))
+        })
+  }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageController - createForm" enabled="true" name="mccf">def createForm = Action.async {
+    implicit request =&gt;
+      Message.findAll.map {
+        messages =&gt; Ok(views.html.messages(messageForm, messages))
+      }
+  }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageController - Channel push (WebSocket)" enabled="true" name="mccp">channel.push(Json.toJson(newMessage))</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageController - Imports" enabled="true" name="mci">import play.api.data.Form
+import play.api.data.Forms._
+import play.api.mvc.Action
+import play.api.mvc.Controller
+import scala.concurrent.Future
+import model._
+import play.modules.reactivemongo.MongoController
+import scala.concurrent.ExecutionContext
+import play.api.libs.json.JsValue
+import play.api.libs.iteratee.Concurrent
+import play.api.mvc.WebSocket
+import play.api.libs.iteratee.Iteratee
+import play.api.libs.json.Json
+import play.api.Logger</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageController - messageForm" enabled="true" name="mcmf">val messageForm = Form(
+    tuple(
+      "author" -&gt; nonEmptyText(minLength = 3),
+      "message" -&gt; nonEmptyText(minLength = 1, maxLength = 120)))</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageController - WebSocker definition v1" enabled="true" name="mcws1">val (broadcast, channel) = Concurrent.broadcast[JsValue]
+
+  def feed = WebSocket.using[JsValue] { req =&gt;
+    (Iteratee.foreach { json =&gt;
+      Unit
+    }, broadcast)
+  }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="MessageController - WebSocket v2" enabled="true" name="mcws2">val form = messageForm.bind(json)
+      if (!form.hasErrors) {
+        val newMessage = Message(form.get._1, form.get._2)
+        Message.save(newMessage)
+        channel.push(Json.toJson(newMessage))
+      }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="Message - findAll version 1" enabled="true" name="mfa1">def findAll = {
+    collection.find(BSONDocument()).sort(BSONDocument("_id" -&gt; -1)).cursor[Message].collect[List]() 
+  }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="Message - findAll version 2 (byAuthor)" enabled="true" name="mfa2">def findAll(author: Option[String]) = {
+    val query = author match {
+      case Some(author) =&gt; BSONDocument("author" -&gt; author)
+      case _ =&gt; BSONDocument()
+    }
+    collection.find(query).sort(BSONDocument("_id" -&gt; -1)).cursor[Message].collect[List]()
+  }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="Message - findAll version 3 (Wrapper)" enabled="true" name="mfa3">def findAll: Future[List[Message]] = findAll(None)</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="Message - Mongo definitions" enabled="true" name="mmd">  def db = ReactiveMongoPlugin.db
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
+  def collection = db.collection[BSONCollection]("Messages")
+
+  implicit val messageWrites = Json.writes[Message]
+  implicit val messageReads = Json.reads[Message]
+  
+  // Does the mapping BSON &lt;-&gt; Scala object
+  implicit object MessageBSONReader extends BSONDocumentReader[Message] {
+    def read(doc: BSONDocument): Message = Message(
+      doc.getAs[String]("author").get,      
+      doc.getAs[String]("message").get,      
+      doc.getAs[BSONObjectID]("_id").map(_.stringify))
+
+  }
+
+  implicit object MatchBSONWriter extends BSONDocumentWriter[Message] {
+    def write(writeMessage: Message) = {
+      val bson = BSONDocument(
+        "_id" -&gt; BSONObjectID(writeMessage.id.get),
+        "author" -&gt; writeMessage.author,
+        "message" -&gt; writeMessage.message)
+
+      bson
+    }
+  }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="Message - Imports (Model)" enabled="true" name="mmi">import scala.concurrent.ExecutionContext
+import play.api.libs.json.Json
+import play.modules.reactivemongo.ReactiveMongoPlugin
+import play.api.Play.current
+import reactivemongo.bson._
+import reactivemongo.api.collections.default.BSONCollection
+import scala.concurrent.Future</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="Message - save" enabled="true" name="ms">def save(message: Message) = {
+    collection.insert(message)
+  }</template><template autoinsert="true" context="org.scala-ide.sdt.core.templates" deleted="false" description="ViewHelper definition" enabled="true" name="vh">implicit val myFields = FieldConstructor(inputTemplate.f) </template></templates>

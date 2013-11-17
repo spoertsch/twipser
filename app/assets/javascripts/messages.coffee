@@ -1,5 +1,8 @@
+
+#wsd
 ws = new WebSocket("ws://localhost:9000/feed")
 
+#wsom
 ws.onmessage = (event) ->
   message = JSON.parse(event.data)
   markup = $("<blockquote>").append($("<p>").text(message.message))
@@ -8,6 +11,7 @@ ws.onmessage = (event) ->
 
 
 ###
+#wsf
 $(window).ready(() ->
   $("form").submit((event) ->
     ws.send(JSON.stringify(
@@ -18,4 +22,5 @@ $(window).ready(() ->
     $("#message").val("")
     false
   )
-)###
+)
+###

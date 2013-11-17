@@ -18,13 +18,16 @@ import play.api.Logger
 
 object MessageController extends Controller with MongoController {
 
+  //ec
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
+  // mcmf
   val messageForm = Form(
     tuple(
       "author" -> nonEmptyText(minLength = 3),
       "message" -> nonEmptyText(minLength = 1, maxLength = 120)))
-
+      
+  //mccf    
   def createForm = Action.async {
     implicit request =>
       Message.findAll.map {
@@ -32,6 +35,7 @@ object MessageController extends Controller with MongoController {
       }
   }
 
+  // mcc
   def create = Action.async {
     implicit request =>
       messageForm.bindFromRequest.fold(
@@ -48,6 +52,7 @@ object MessageController extends Controller with MongoController {
         })
   }
   
+  //mcws1
   val (broadcast, channel) = Concurrent.broadcast[JsValue]
 
   def feed = WebSocket.using[JsValue] { req =>
@@ -56,6 +61,7 @@ object MessageController extends Controller with MongoController {
     }, broadcast)
   }
   
+  	//mcws2
 //  def feed = WebSocket.using[JsValue] { req =>
 //    (Iteratee.foreach { json =>
 //      val form = messageForm.bind(json)
