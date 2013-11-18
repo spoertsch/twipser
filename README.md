@@ -38,3 +38,4 @@ curl --header "Content-type: application/json" --request POST --data 'author": "
 * [Scala](http://www.scala-lang.org/)
 * [Typesafe](http://typesafe.com/)
 * [Typesafe Console](http://typesafe.com/platform/runtime/console)
+* [Reactive Manifesto](http://www.reactivemanifesto.org/)
