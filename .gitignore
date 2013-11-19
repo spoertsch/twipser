@@ -17,3 +17,5 @@ dist
 /.settings
 .cache/
 dist/*
+bin/
+
