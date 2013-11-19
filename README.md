@@ -20,7 +20,7 @@ curl --header "Content-type: application/json" --request GET http://localhost:90
 
 ##### Create new message
 ```bash
-curl --header "Content-type: application/json" --request POST --data 'author": "Jan", "message": "CURL TEST"}' http://localhost:9000/api/message
+curl --header "Content-type: application/json" --request POST --data '{"author": "Jan", "message": "CURL TEST"}' http://localhost:9000/api/message
 ```
 
 ### Resources
