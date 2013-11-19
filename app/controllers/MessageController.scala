@@ -4,6 +4,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.Action
 import play.api.mvc.Controller
+import play.api.mvc.Results._
 import scala.concurrent.Future
 import model._
 import play.modules.reactivemongo.MongoController
@@ -46,9 +47,15 @@ object MessageController extends Controller with MongoController {
         },
         message => {
           val newMessage = Message(message._1, message._2)
-          Message.save(newMessage)
-          channel.push(Json.toJson(newMessage))
-          Future.successful(Redirect(routes.MessageController.createForm()))
+          Message.save(newMessage).map(lastError => {
+        	  if (lastError.ok) {
+	        	  channel.push(Json.toJson(newMessage))
+	        	  Redirect(routes.MessageController.createForm())
+        	  } else {
+        		  InternalServerError(lastError.message)
+        	  }
+          })
+          
         })
   }
   
