@@ -1,25 +1,19 @@
 package controllers
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
+import model.Twiip
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.nonEmptyText
+import play.api.data.Forms.tuple
+import play.api.libs.iteratee.Concurrent
+import play.api.libs.iteratee.Iteratee
+import play.api.libs.json.JsValue
+import play.api.libs.json.Json
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import play.api.mvc.Results._
-import scala.concurrent.Future
-import model._
-import play.modules.reactivemongo.MongoController
-import scala.concurrent.ExecutionContext
-import play.api.libs.json.JsValue
-import play.api.libs.iteratee.Concurrent
 import play.api.mvc.WebSocket
-import play.api.libs.iteratee.Iteratee
-import play.api.libs.json.Json
-import play.api.Logger
-import play.api.libs.json.Writes
-import org.joda.time.LocalDateTime
-import play.api.libs.json.JsString
-import org.joda.time.format.ISODateTimeFormat
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.modules.reactivemongo.MongoController
 
 object TwiipController extends Controller with MongoController {
 
