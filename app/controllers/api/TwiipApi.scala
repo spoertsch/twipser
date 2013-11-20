@@ -69,6 +69,31 @@ object TwiipApi extends Controller {
         }
       }
   }
+  
+  
+  def findNLatest(n: Int) = Action.async {
+    implicit req =>
+      Twiip.findNLatest(n).map { twiips =>
+        render {
+          case Accepts.Json() => {
+            Ok(Json.toJson(twiips)).as(JSON)
+          }
+          case Accepts.Xml() => {
+            Ok(<twiips>
+                 {
+                   twiips.map(t => <twiip>
+                                     <author>{ t.author }</author>
+                                     <text>{ t.message }</text>
+                                     <createdAt>{ t.createdAtISO }</createdAt>
+                                   </twiip>)
+                 }
+               </twiips>).as(XML)
+          }
+          case _ => NotAcceptable
+
+        }
+      }
+  }
 
   // mar
   implicit val rds = (
