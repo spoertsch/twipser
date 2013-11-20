@@ -1,30 +1,29 @@
 package actors
 
-import akka.actor.Actor
-import model.Twiip
-import play.api.libs.json.Json
 import scala.concurrent.ExecutionContext.Implicits.global
-import play.api.Logger
-import java.util.Date
-import controllers.TwiipController
 
-case class GenerateDummyMessage()
+import akka.actor.Actor
+import controllers.TwiipController
+import model.Twiip
+import play.api.Logger
+import play.api.libs.json.Json
+
+case class GenerateDummyTwiip()
 
 class MessageActor extends Actor {
 
   // macr
   def receive = {
-    case GenerateDummyMessage => {
-      val date = new Date()
-      val message = Twiip("Dummy", "This is a dummy message (" + date + ")")
-      Twiip.save(message).map { lastError =>
+    case GenerateDummyTwiip => {
+      val twiip = Twiip("Dummy", "This is a dummy twiip!")
+      Twiip.save(twiip).map { lastError =>
         if (lastError.ok) {
-          TwiipController.channel.push(Json.toJson(message))
+          TwiipController.channel.push(Json.toJson(twiip))
         } else {
-          Logger.error("Error generating dummy message: " + lastError)
+          Logger.error("Error generating dummy twiip: " + lastError)
         }
       }
     }
-    case _ => Logger.error("Invalid message")
+    case _ => Logger.error("Invalid twiip")
   }
 }

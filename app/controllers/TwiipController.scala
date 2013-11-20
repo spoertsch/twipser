@@ -31,7 +31,7 @@ object TwiipController extends Controller with MongoController {
   def createForm = Action.async {
     implicit request =>
       Twiip.findAll.map {
-        twiips => Ok(views.html.messages(twiipForm, twiips))
+        twiips => Ok(views.html.twiips(twiipForm, twiips))
       }
   }
 
@@ -41,7 +41,7 @@ object TwiipController extends Controller with MongoController {
       twiipForm.bindFromRequest.fold(
         errors => {
           Twiip.findAll.map {
-            twiips => BadRequest(views.html.messages(errors, twiips))
+            twiips => BadRequest(views.html.twiips(errors, twiips))
           }
         },
         twiip => {

@@ -8,22 +8,22 @@ In order to run the application you need to have a MongoDB up and running.
 
 ### API
 
-##### Get all messages
+##### Get all twiips
 ```bash
-curl --request GET http://localhost:9000/api/messages
+curl --request GET http://localhost:9000/api/twiips
 ```
 
-##### Get all messages by an author
+##### Get all twiips by an author
 ```bash
-curl --header "Accept: application/json" --request GET http://localhost:9000/api/messages/Jan
-curl --header "Accept: application/vnd.com.twipser.message.v2+json" --request GET http://localhost:9000/api/messages/Jan
-curl --header "Accept: application/xml" --request GET http://localhost:9000/api/messages/Jan
-curl --header "Accept: application/xml" --header "Accept-Encoding: gzip" --request GET http://localhost:9000/api/messages/Jan
+curl --header "Accept: application/json" --request GET http://localhost:9000/api/twiips/Jan
+curl --header "Accept: application/vnd.com.twipser.message.v2+json" --request GET http://localhost:9000/api/twiips/Jan
+curl --header "Accept: application/xml" --request GET http://localhost:9000/api/twiips/Jan
+curl --header "Accept: application/xml" --header "Accept-Encoding: gzip" --request GET http://localhost:9000/api/twiips/Jan
 ```
 
-##### Create new message
+##### Create new twiip
 ```bash
-curl --header "Content-type: application/json" --request POST --data '{"author": "Jan", "message": "CURL TEST"}' http://localhost:9000/api/message
+curl --header "Content-type: application/json" --request POST --data '{"author": "Jan", "message": "CURL TEST"}' http://localhost:9000/api/twiip
 ```
 
 ### Resources

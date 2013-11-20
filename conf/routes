@@ -5,13 +5,13 @@
 # Home page
 GET     /                           controllers.Application.index
 
-GET		/messages					controllers.TwiipController.createForm
-POST	/message					controllers.TwiipController.create
+GET		/twiips						controllers.TwiipController.createForm
+POST	/twiip						controllers.TwiipController.create
 
 # API
-GET		/api/messages				controllers.api.TwiipApi.findAll
-GET		/api/messages/:author		controllers.api.TwiipApi.findAllByAuthor(author)
-POST	/api/message				controllers.api.TwiipApi.createJson()
+GET		/api/twiips					controllers.api.TwiipApi.findAll
+GET		/api/twiips/:author			controllers.api.TwiipApi.findAllByAuthor(author)
+POST	/api/twiip					controllers.api.TwiipApi.createJson()
 
 GET     /feed                       controllers.TwiipController.feed
 
