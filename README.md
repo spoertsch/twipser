@@ -18,6 +18,7 @@ curl --request GET http://localhost:9000/api/messages
 curl --header "Accept: application/json" --request GET http://localhost:9000/api/messages/Jan
 curl --header "Accept: application/vnd.com.twipser.message.v2+json" --request GET http://localhost:9000/api/messages/Jan
 curl --header "Accept: application/xml" --request GET http://localhost:9000/api/messages/Jan
+curl --header "Accept: application/xml" --header "Accept-Encoding: gzip" --request GET http://localhost:9000/api/messages/Jan
 ```
 
 ##### Create new message
