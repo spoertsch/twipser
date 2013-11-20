@@ -17,13 +17,11 @@ import play.modules.reactivemongo.MongoController
 
 object TwiipController extends Controller with MongoController {
 
-  // mcmf
   val twiipForm = Form(
     tuple(
       "author" -> nonEmptyText(minLength = 3),
       "message" -> nonEmptyText(minLength = 1, maxLength = 120)))
 
-  //mccf    
   def createForm = Action.async {
     implicit request =>
       Twiip.findAll.map {
@@ -31,7 +29,6 @@ object TwiipController extends Controller with MongoController {
       }
   }
 
-  // mcc
   def create = Action.async {
     implicit request =>
       twiipForm.bindFromRequest.fold(
@@ -54,7 +51,6 @@ object TwiipController extends Controller with MongoController {
         })
   }
 
-  //mcws1
   val (broadcast, channel) = Concurrent.broadcast[JsValue]
 
   def pushToFeed(twiip: Twiip) = {
@@ -67,7 +63,6 @@ object TwiipController extends Controller with MongoController {
     }, broadcast)
   }
 
-  //mcws2
   //  def feed = WebSocket.using[JsValue] { req =>
   //    (Iteratee.foreach { json =>
   //      val form = twiipForm.bind(json)

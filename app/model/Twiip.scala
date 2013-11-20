@@ -2,10 +2,8 @@ package model
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 import org.joda.time.LocalDateTime
 import org.joda.time.format.ISODateTimeFormat
-
 import play.api.Play.current
 import play.api.libs.functional.syntax.functionalCanBuildApplicative
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
@@ -26,6 +24,7 @@ import reactivemongo.bson.BSONObjectID
 import reactivemongo.bson.BSONObjectIDIdentity
 import reactivemongo.bson.BSONStringHandler
 import reactivemongo.bson.Producer.nameValue2Producer
+import play.api.libs.json.Json
 
 case class Twiip(author: String,
   message: String,
@@ -40,7 +39,6 @@ case class Twiip(author: String,
 
 object Twiip {
 
-  // mmd
   def db = ReactiveMongoPlugin.db
   def collection = db.collection[BSONCollection]("Twiips")
 
@@ -73,15 +71,12 @@ object Twiip {
     }
   }
 
-  // mfa3
   def findAll: Future[List[Twiip]] = findAll(None)
 
-  // mfa1
   //  def findAll = {
   //    collection.find(BSONDocument()).sort(BSONDocument("created_at" -> -1)).options(QueryOpts().batchSize(10)).cursor[Message].collect[List]() 
   //  }
 
-  // mfa2
   def findAll(author: Option[String]) = {
     val query = author match {
       case Some(author) => BSONDocument("author" -> author)
@@ -98,7 +93,6 @@ object Twiip {
     collection.find(BSONDocument()).sort(BSONDocument("created_at" -> -1)).options(QueryOpts().batchSize(n)).cursor[Twiip].collect[List](n)
   }
 
-  // ms
   def save(twiit: Twiip) = {
     collection.insert(twiit)
   }

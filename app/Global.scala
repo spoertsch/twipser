@@ -6,9 +6,11 @@ import akka.actor.Props
 import play.api.GlobalSettings
 import play.api.Logger
 import play.api.Play.current
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.concurrent.Akka
 import play.api.mvc.WithFilters
 import play.filters.gzip.GzipFilter
+import scala.concurrent.duration.DurationInt
 
 object Global extends WithFilters(new GzipFilter()) with GlobalSettings {
 

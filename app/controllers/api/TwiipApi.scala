@@ -14,11 +14,10 @@ import play.api.mvc.Controller
 
 object TwiipApi extends Controller {
 
-  // mafa
   def findAll() = Action.async {
     implicit req =>
-      Twiip.findAll.map { messages =>
-        Ok(Json.toJson(messages)).as(JSON)
+      Twiip.findAll.map { twiips =>
+        Ok(Json.toJson(twiips)).as(JSON)
       }
   }
 
@@ -45,7 +44,6 @@ object TwiipApi extends Controller {
         })
   }
 
-  // mafaba
   def findAllByAuthor(author: String) = Action.async {
     implicit req =>
       Twiip.findAll(Some(author)).map { twiips =>
@@ -69,7 +67,6 @@ object TwiipApi extends Controller {
         }
       }
   }
-  
   
   def findNLatest(n: Int) = Action.async {
     implicit req =>
@@ -95,12 +92,10 @@ object TwiipApi extends Controller {
       }
   }
 
-  // mar
   implicit val rds = (
     (__ \ 'author).read[String] and
     (__ \ 'message).read[String]) tupled
 
-  // mac
   def createJson() = Action(parse.json) { implicit request =>
     request.body.validate[(String, String)].map {
       case (author, message) => {
