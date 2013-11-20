@@ -19,11 +19,9 @@ import play.api.libs.json.Writes
 import org.joda.time.LocalDateTime
 import play.api.libs.json.JsString
 import org.joda.time.format.ISODateTimeFormat
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object TwiipController extends Controller with MongoController {
-
-  //ec
-  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   // mcmf
   val twiipForm = Form(
