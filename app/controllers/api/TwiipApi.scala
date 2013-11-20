@@ -15,17 +15,10 @@ import play.Logger
 import controllers.TwiipController
 
 
-case class MessageV2(author: String, message: String, createdOn: DateTime, id: String = BSONObjectID.generate.stringify)
-
 object TwiipApi extends Controller {
 
   // ec
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
-
-  val AcceptMessageV2Json = Accepting("application/vnd.com.twipser.message.v2+json")
-
-  implicit val messageWrites = Json.writes[MessageV2]
-  implicit val messageReads = Json.reads[MessageV2]
 
   // mafa
   def findAll() = Action.async {
@@ -34,16 +27,35 @@ object TwiipApi extends Controller {
         Ok(Json.toJson(messages)).as(JSON)
       }
   }
+  
+   def findById(id: String) = Action.async {
+    implicit req =>
+      Twiip.findById(id).map(twiip =>
+        twiip match {
+          case Some(twiip) => {
+            render {
+              case Accepts.Json() => {
+                Ok(Json.toJson(twiip)).as(JSON)
+              }
+              case Accepts.Xml() => {
+                Ok(<twiip>
+                		<author>{ twiip.author }</author>
+                        <text>{ twiip.message }</text>
+                        <createdAt>{ twiip.createdAtISO }</createdAt>
+                   </twiip>).as(XML)
+              }
+              case _ => NotAcceptable
+            }
+          }
+          case _ => NotFound
+        })
+  }
 
   // mafaba
   def findAllByAuthor(author: String) = Action.async {
     implicit req =>
       Twiip.findAll(Some(author)).map { twiips =>
         render {
-          case AcceptMessageV2Json() => {
-            val messagesV2 = twiips.map(m => MessageV2(m.author, m.message, new DateTime(), m.id))
-            Ok(Json.toJson(messagesV2)).as(JSON)
-          }
           case Accepts.Json() => {
             Ok(Json.toJson(twiips)).as(JSON)
           }
