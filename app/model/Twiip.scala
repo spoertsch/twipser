@@ -12,17 +12,18 @@ import org.joda.time.LocalDateTime
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import reactivemongo.api.QueryOpts
 
 case class Twiip(author: String,
   message: String,
   createdAt: LocalDateTime = new LocalDateTime(),
   id: String = BSONObjectID.generate.stringify) {
-  
+
   /**
    * Converts createdAt to printable date time.
    */
-  def createdAtISO() : String = ISODateTimeFormat.dateTimeNoMillis().print(createdAt)
-  
+  def createdAtISO(): String = ISODateTimeFormat.dateTimeNoMillis().print(createdAt)
+
 }
 
 object Twiip {
@@ -52,21 +53,21 @@ object Twiip {
   }
 
   implicit object MatchBSONWriter extends BSONDocumentWriter[Twiip] {
-    def write(writeMessage: Twiip) = {
+    def write(twiip: Twiip) = {
       BSONDocument(
-        "_id" -> BSONObjectID(writeMessage.id),
-        "author" -> writeMessage.author,
-        "created_at" -> BSONDateTime(writeMessage.createdAt.toDateTime().getMillis()),
-        "message" -> writeMessage.message)
+        "_id" -> BSONObjectID(twiip.id),
+        "author" -> twiip.author,
+        "created_at" -> BSONDateTime(twiip.createdAt.toDateTime().getMillis()),
+        "message" -> twiip.message)
     }
   }
-  
+
   // mfa3
   def findAll: Future[List[Twiip]] = findAll(None)
 
   // mfa1
   //  def findAll = {
-  //    collection.find(BSONDocument()).sort(BSONDocument("_id" -> -1)).cursor[Message].collect[List]() 
+  //    collection.find(BSONDocument()).sort(BSONDocument("created_at" -> -1)).options(QueryOpts().batchSize(10)).cursor[Message].collect[List]() 
   //  }
 
   // mfa2
@@ -75,9 +76,9 @@ object Twiip {
       case Some(author) => BSONDocument("author" -> author)
       case _ => BSONDocument()
     }
-    collection.find(query).sort(BSONDocument("createdAt" -> -1)).cursor[Twiip].collect[List]()
+    collection.find(query).sort(BSONDocument("created_at" -> -1)).options(QueryOpts().batchSize(10)).cursor[Twiip].collect[List]()
   }
-  
+
   def findById(id: String): Future[Option[Twiip]] = {
     collection.find(BSONDocument("_id" -> BSONObjectID(id))).one[Twiip]
   }

@@ -14,7 +14,6 @@ import reactivemongo.bson.BSONObjectID
 import play.Logger
 import controllers.TwiipController
 
-
 object TwiipApi extends Controller {
 
   // ec
@@ -27,8 +26,8 @@ object TwiipApi extends Controller {
         Ok(Json.toJson(messages)).as(JSON)
       }
   }
-  
-   def findById(id: String) = Action.async {
+
+  def findById(id: String) = Action.async {
     implicit req =>
       Twiip.findById(id).map(twiip =>
         twiip match {
@@ -39,9 +38,9 @@ object TwiipApi extends Controller {
               }
               case Accepts.Xml() => {
                 Ok(<twiip>
-                		<author>{ twiip.author }</author>
-                        <text>{ twiip.message }</text>
-                        <createdAt>{ twiip.createdAtISO }</createdAt>
+                     <author>{ twiip.author }</author>
+                     <text>{ twiip.message }</text>
+                     <createdAt>{ twiip.createdAtISO }</createdAt>
                    </twiip>).as(XML)
               }
               case _ => NotAcceptable
@@ -61,12 +60,14 @@ object TwiipApi extends Controller {
           }
           case Accepts.Xml() => {
             Ok(<twiips>
-                { twiips.map(t => <twiip>
-                						<author>{ t.author }</author>
-                						<text>{ t.message }</text>
-                						<createdAt>{ t.createdAtISO }</createdAt>
-                					</twiip>) }
-              </twiips>).as(XML)
+                 {
+                   twiips.map(t => <twiip>
+                                     <author>{ t.author }</author>
+                                     <text>{ t.message }</text>
+                                     <createdAt>{ t.createdAtISO }</createdAt>
+                                   </twiip>)
+                 }
+               </twiips>).as(XML)
           }
           case _ => NotAcceptable
 
@@ -86,9 +87,8 @@ object TwiipApi extends Controller {
         val newTwiip = Twiip(author, message)
         Twiip.save(newTwiip)
         TwiipController.channel.push(Json.toJson(newTwiip))
-        Created.withHeaders( 
-          "Location" -> routes.TwiipApi.findById(newTwiip.id).absoluteURL()
-        )
+        Created.withHeaders(
+          "Location" -> routes.TwiipApi.findById(newTwiip.id).absoluteURL())
       }
     }.recoverTotal {
       e => BadRequest("Detected error:" + JsError.toFlatJson(e))

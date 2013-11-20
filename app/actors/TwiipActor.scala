@@ -18,7 +18,7 @@ class MessageActor extends Actor {
       val twiip = Twiip("Dummy", "This is a dummy twiip!")
       Twiip.save(twiip).map { lastError =>
         if (lastError.ok) {
-          TwiipController.channel.push(Json.toJson(twiip))
+          TwiipController.pushToFeed(twiip)
         } else {
           Logger.error("Error generating dummy twiip: " + lastError)
         }
