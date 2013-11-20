@@ -1,19 +1,31 @@
 package model
 
-//mmi
-import scala.concurrent.ExecutionContext
-import play.api.libs.json.Json
-import play.modules.reactivemongo.ReactiveMongoPlugin
-import play.api.Play.current
-import reactivemongo.bson._
-import reactivemongo.api.collections.default.BSONCollection
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+
 import org.joda.time.LocalDateTime
 import org.joda.time.format.ISODateTimeFormat
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
+
+import play.api.Play.current
+import play.api.libs.functional.syntax.functionalCanBuildApplicative
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.json.JsString
+import play.api.libs.json.Reads
+import play.api.libs.json.Writes
+import play.modules.reactivemongo.ReactiveMongoPlugin
 import reactivemongo.api.QueryOpts
-import scala.concurrent.ExecutionContext.Implicits.global
+import reactivemongo.api.collections.default.BSONCollection
+import reactivemongo.bson.BSONDateTime
+import reactivemongo.bson.BSONDateTimeIdentity
+import reactivemongo.bson.BSONDocument
+import reactivemongo.bson.BSONDocumentIdentity
+import reactivemongo.bson.BSONDocumentReader
+import reactivemongo.bson.BSONDocumentWriter
+import reactivemongo.bson.BSONIntegerHandler
+import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson.BSONObjectIDIdentity
+import reactivemongo.bson.BSONStringHandler
+import reactivemongo.bson.Producer.nameValue2Producer
 
 case class Twiip(author: String,
   message: String,

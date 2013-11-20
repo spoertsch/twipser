@@ -1,9 +1,10 @@
 package viewhelper
 
-import views.html.helper.FieldConstructor
-import views.html.inputTemplate
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
+
+import views.html.helper.FieldConstructor
+import views.html.inputTemplate
 
 object ViewHelper {
   // vh

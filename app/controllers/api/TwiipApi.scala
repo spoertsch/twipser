@@ -1,15 +1,16 @@
 package controllers.api
 
-import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
+
+import controllers.TwiipController
 import model.Twiip
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.functionalCanBuildApplicative
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.json.JsError
 import play.api.libs.json.Json
-import play.api.mvc.Accepting
+import play.api.libs.json.__
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import controllers.TwiipController
 
 object TwiipApi extends Controller {
 
