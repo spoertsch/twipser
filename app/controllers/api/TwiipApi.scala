@@ -14,6 +14,14 @@ import play.api.mvc.Controller
 
 object TwiipApi extends Controller {
 
+  def mapTwiipToXml(twiip: Twiip) = {
+    <twiip>
+      <author>{ twiip.author }</author>
+      <text>{ twiip.message }</text>
+      <createdAt>{ twiip.createdAtISO }</createdAt>
+    </twiip>
+  }
+
   def findAll() = Action.async {
     implicit req =>
       Twiip.findAll.map { twiips =>
@@ -31,11 +39,7 @@ object TwiipApi extends Controller {
                 Ok(Json.toJson(twiip)).as(JSON)
               }
               case Accepts.Xml() => {
-                Ok(<twiip>
-                     <author>{ twiip.author }</author>
-                     <text>{ twiip.message }</text>
-                     <createdAt>{ twiip.createdAtISO }</createdAt>
-                   </twiip>).as(XML)
+                Ok(mapTwiipToXml(twiip)).as(XML)
               }
               case _ => NotAcceptable
             }
@@ -54,11 +58,7 @@ object TwiipApi extends Controller {
           case Accepts.Xml() => {
             Ok(<twiips>
                  {
-                   twiips.map(t => <twiip>
-                                     <author>{ t.author }</author>
-                                     <text>{ t.message }</text>
-                                     <createdAt>{ t.createdAtISO }</createdAt>
-                                   </twiip>)
+                   twiips.map(t => mapTwiipToXml(t))
                  }
                </twiips>).as(XML)
           }
@@ -67,7 +67,7 @@ object TwiipApi extends Controller {
         }
       }
   }
-  
+
   def findNLatest(n: Int) = Action.async {
     implicit req =>
       Twiip.findNLatest(n).map { twiips =>
@@ -78,11 +78,7 @@ object TwiipApi extends Controller {
           case Accepts.Xml() => {
             Ok(<twiips>
                  {
-                   twiips.map(t => <twiip>
-                                     <author>{ t.author }</author>
-                                     <text>{ t.message }</text>
-                                     <createdAt>{ t.createdAtISO }</createdAt>
-                                   </twiip>)
+                   twiips.map(t => mapTwiipToXml(t))
                  }
                </twiips>).as(XML)
           }
