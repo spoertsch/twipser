@@ -1,4 +1,4 @@
-@(messageForm: Form[(String, String)], messages: List[model.Message])(implicit lang: Lang)
+@(twiipForm: Form[(String, String)], twiips: List[model.Twiip])(implicit lang: Lang)
 
 @import helper._
 @import viewhelper.ViewHelper._
@@ -7,9 +7,9 @@
 
 	<!-- mtf -->
 	<div class="container">
-		@form(routes.MessageController.create) {
-			@inputText(messageForm("author"), '_label -> Messages("message.author"))
-			@inputText(messageForm("message"), '_label -> Messages("message.message"))	
+		@form(routes.TwiipController.create) {
+			@inputText(twiipForm("author"), '_label -> Messages("message.author"))
+			@inputText(twiipForm("message"), '_label -> Messages("message.message"))	
 			<br />
 			<input class="btn btn-large" type="submit" value="@Messages("message.add")" />	
 		}
@@ -22,10 +22,10 @@
 
 	<!-- mtl -->
     <div id="all-messages">
-    @for(m <- messages) {
+    @for(m <- twiips) {
 		<blockquote>
 			<p>@m.message</p>
-			<small>@m.author</small>
+			<small>@m.author (@formatJodaDateTime(m.createdAt))</small>
 		</blockquote>
     }
     </div>

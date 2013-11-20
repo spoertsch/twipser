@@ -5,15 +5,15 @@
 # Home page
 GET     /                           controllers.Application.index
 
-GET		/messages					controllers.MessageController.createForm
-POST	/message					controllers.MessageController.create
+GET		/messages					controllers.TwiipController.createForm
+POST	/message					controllers.TwiipController.create
 
 # API
-GET		/api/messages				controllers.api.MessageApi.findAll
-GET		/api/messages/:author		controllers.api.MessageApi.findAllByAuthor(author)
-POST	/api/message				controllers.api.MessageApi.createJson()
+GET		/api/messages				controllers.api.TwiipApi.findAll
+GET		/api/messages/:author		controllers.api.TwiipApi.findAllByAuthor(author)
+POST	/api/message				controllers.api.TwiipApi.createJson()
 
-GET     /feed                       controllers.MessageController.feed
+GET     /feed                       controllers.TwiipController.feed
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

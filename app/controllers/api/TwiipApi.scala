@@ -2,22 +2,22 @@ package controllers.api
 
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import model.Message
+import model.Twiip
 import play.api.libs.json.Json
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import controllers.MessageController
 import scala.concurrent.ExecutionContext
 import views.html.defaultpages.notFound
 import play.api.mvc.Accepting
 import org.joda.time.DateTime
 import reactivemongo.bson.BSONObjectID
 import play.Logger
+import controllers.TwiipController
 
 
 case class MessageV2(author: String, message: String, createdOn: DateTime, id: String = BSONObjectID.generate.stringify)
 
-object MessageApi extends Controller {
+object TwiipApi extends Controller {
 
   // ec
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
@@ -30,7 +30,7 @@ object MessageApi extends Controller {
   // mafa
   def findAll() = Action.async {
     implicit req =>
-      Message.findAll.map { messages =>
+      Twiip.findAll.map { messages =>
         Ok(Json.toJson(messages)).as(JSON)
       }
   }
@@ -38,19 +38,23 @@ object MessageApi extends Controller {
   // mafaba
   def findAllByAuthor(author: String) = Action.async {
     implicit req =>
-      Message.findAll(Some(author)).map { messages =>
+      Twiip.findAll(Some(author)).map { twiips =>
         render {
           case AcceptMessageV2Json() => {
-            val messagesV2 = messages.map(m => MessageV2(m.author, m.message, new DateTime(), m.id))
+            val messagesV2 = twiips.map(m => MessageV2(m.author, m.message, new DateTime(), m.id))
             Ok(Json.toJson(messagesV2)).as(JSON)
           }
           case Accepts.Json() => {
-            Ok(Json.toJson(messages)).as(JSON)
+            Ok(Json.toJson(twiips)).as(JSON)
           }
           case Accepts.Xml() => {
-            Ok(<messages>
-                { messages.map(m => <message><author>{ m.author }</author><text>{ m.message }</text></message>) }
-              </messages>).as(XML)
+            Ok(<twiips>
+                { twiips.map(t => <twiip>
+                						<author>{ t.author }</author>
+                						<text>{ t.message }</text>
+                						<createdAt>{ t.createdAtISO }</createdAt>
+                					</twiip>) }
+              </twiips>).as(XML)
           }
           case _ => NotAcceptable
 
@@ -67,10 +71,10 @@ object MessageApi extends Controller {
   def createJson() = Action(parse.json) { request =>
     request.body.validate[(String, String)].map {
       case (author, message) => {
-        val newMessage = Message(author, message)
-        Message.save(newMessage)
-        MessageController.channel.push(Json.toJson(newMessage))
-        Ok(Json.toJson(newMessage)).as(JSON)
+        val newTwiip = Twiip(author, message)
+        Twiip.save(newTwiip)
+        TwiipController.channel.push(Json.toJson(newTwiip))
+        Ok(Json.toJson(newTwiip)).as(JSON)
       }
     }.recoverTotal {
       e => BadRequest("Detected error:" + JsError.toFlatJson(e))

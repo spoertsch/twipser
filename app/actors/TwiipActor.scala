@@ -1,12 +1,12 @@
 package actors
 
 import akka.actor.Actor
-import model.Message
-import controllers.MessageController
+import model.Twiip
 import play.api.libs.json.Json
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.Logger
 import java.util.Date
+import controllers.TwiipController
 
 case class GenerateDummyMessage()
 
@@ -16,10 +16,10 @@ class MessageActor extends Actor {
   def receive = {
     case GenerateDummyMessage => {
       val date = new Date()
-      val message = Message("Dummy", "This is a dummy message (" + date + ")")
-      Message.save(message).map { lastError =>
+      val message = Twiip("Dummy", "This is a dummy message (" + date + ")")
+      Twiip.save(message).map { lastError =>
         if (lastError.ok) {
-          MessageController.channel.push(Json.toJson(message))
+          TwiipController.channel.push(Json.toJson(message))
         } else {
           Logger.error("Error generating dummy message: " + lastError)
         }
