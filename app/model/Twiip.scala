@@ -13,6 +13,7 @@ import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import reactivemongo.api.QueryOpts
+import scala.concurrent.ExecutionContext.Implicits.global
 
 case class Twiip(author: String,
   message: String,
@@ -23,14 +24,12 @@ case class Twiip(author: String,
    * Converts createdAt to printable date time.
    */
   def createdAtISO(): String = ISODateTimeFormat.dateTimeNoMillis().print(createdAt)
-
 }
 
 object Twiip {
 
   // mmd
   def db = ReactiveMongoPlugin.db
-  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
   def collection = db.collection[BSONCollection]("Twiips")
 
   implicit val readsJodaLocalDateTime = Reads[LocalDateTime](js =>
@@ -44,7 +43,7 @@ object Twiip {
   implicit val twiipReads = Json.reads[Twiip]
 
   // Does the mapping BSON <-> Scala object
-  implicit object MessageBSONReader extends BSONDocumentReader[Twiip] {
+  implicit object TwiipBSONReader extends BSONDocumentReader[Twiip] {
     def read(doc: BSONDocument): Twiip = Twiip(
       doc.getAs[String]("author").get,
       doc.getAs[String]("message").get,
@@ -52,7 +51,7 @@ object Twiip {
       doc.getAs[BSONObjectID]("_id").get.stringify)
   }
 
-  implicit object MatchBSONWriter extends BSONDocumentWriter[Twiip] {
+  implicit object TwiipBSONWriter extends BSONDocumentWriter[Twiip] {
     def write(twiip: Twiip) = {
       BSONDocument(
         "_id" -> BSONObjectID(twiip.id),

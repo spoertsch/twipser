@@ -1,23 +1,17 @@
 package controllers.api
 
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.Implicits.global
+import model.Twiip
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+import play.api.libs.json.Json
+import play.api.mvc.Accepting
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import model.Twiip
-import play.api.libs.json.Json
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
-import scala.concurrent.ExecutionContext
-import views.html.defaultpages.notFound
-import play.api.mvc.Accepting
-import org.joda.time.DateTime
-import reactivemongo.bson.BSONObjectID
-import play.Logger
 import controllers.TwiipController
 
 object TwiipApi extends Controller {
-
-  // ec
-  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   // mafa
   def findAll() = Action.async {
@@ -111,7 +105,7 @@ object TwiipApi extends Controller {
       case (author, message) => {
         val newTwiip = Twiip(author, message)
         Twiip.save(newTwiip)
-        TwiipController.channel.push(Json.toJson(newTwiip))
+        TwiipController.pushToFeed(newTwiip)
         Created.withHeaders(
           "Location" -> routes.TwiipApi.findById(newTwiip.id).absoluteURL())
       }

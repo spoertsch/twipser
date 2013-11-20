@@ -10,7 +10,8 @@ ws.onmessage = (event) ->
   $("#all-twiips").prepend(markup)
   
 
-console.log(formatDate(new Date()))
+#console.log(formatDate(new Date()))
+
 ###
 #wsf
 $(window).ready(() ->

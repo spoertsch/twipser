@@ -6,7 +6,6 @@ import akka.actor.Actor
 import controllers.TwiipController
 import model.Twiip
 import play.api.Logger
-import play.api.libs.json.Json
 
 case class GenerateDummyTwiip()
 
