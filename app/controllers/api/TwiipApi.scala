@@ -80,13 +80,15 @@ object TwiipApi extends Controller {
     (__ \ 'message).read[String]) tupled
 
   // mac
-  def createJson() = Action(parse.json) { request =>
+  def createJson() = Action(parse.json) { implicit request =>
     request.body.validate[(String, String)].map {
       case (author, message) => {
         val newTwiip = Twiip(author, message)
         Twiip.save(newTwiip)
         TwiipController.channel.push(Json.toJson(newTwiip))
-        Ok(Json.toJson(newTwiip)).as(JSON)
+        Created.withHeaders( 
+          "Location" -> routes.TwiipApi.findById(newTwiip.id).absoluteURL()
+        )
       }
     }.recoverTotal {
       e => BadRequest("Detected error:" + JsError.toFlatJson(e))
