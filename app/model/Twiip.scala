@@ -79,7 +79,7 @@ object Twiip {
   }
   
   def findById(id: String): Future[Option[Twiip]] = {
-    collection.find(BSONDocument("_id" -> id)).one[Twiip]
+    collection.find(BSONDocument("_id" -> BSONObjectID(id))).one[Twiip]
   }
 
   // ms
