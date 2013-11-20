@@ -16,7 +16,6 @@ import play.api.libs.iteratee.Iteratee
 import play.api.libs.json.Json
 import play.api.Logger
 
-
 object MessageController extends Controller with MongoController {
 
   //ec
@@ -27,7 +26,7 @@ object MessageController extends Controller with MongoController {
     tuple(
       "author" -> nonEmptyText(minLength = 3),
       "message" -> nonEmptyText(minLength = 1, maxLength = 120)))
-      
+
   //mccf    
   def createForm = Action.async {
     implicit request =>
@@ -48,17 +47,17 @@ object MessageController extends Controller with MongoController {
         message => {
           val newMessage = Message(message._1, message._2)
           Message.save(newMessage).map(lastError => {
-        	  if (lastError.ok) {
-	        	  channel.push(Json.toJson(newMessage))
-	        	  Redirect(routes.MessageController.createForm())
-        	  } else {
-        		  InternalServerError(lastError.message)
-        	  }
+            if (lastError.ok) {
+              channel.push(Json.toJson(newMessage))
+              Redirect(routes.MessageController.createForm())
+            } else {
+              InternalServerError(lastError.message)
+            }
           })
-          
+
         })
   }
-  
+
   //mcws1
   val (broadcast, channel) = Concurrent.broadcast[JsValue]
 
@@ -67,17 +66,17 @@ object MessageController extends Controller with MongoController {
       Unit
     }, broadcast)
   }
-  
-  	//mcws2
-//  def feed = WebSocket.using[JsValue] { req =>
-//    (Iteratee.foreach { json =>
-//      val form = messageForm.bind(json)
-//      if (!form.hasErrors) {
-//        val newMessage = Message(form.get._1, form.get._2)
-//        Message.save(newMessage)
-//        channel.push(Json.toJson(newMessage))
-//      }
-//    }, broadcast)
-//  }
-  
+
+  //mcws2
+  //  def feed = WebSocket.using[JsValue] { req =>
+  //    (Iteratee.foreach { json =>
+  //      val form = messageForm.bind(json)
+  //      if (!form.hasErrors) {
+  //        val newMessage = Message(form.get._1, form.get._2)
+  //        Message.save(newMessage)
+  //        channel.push(Json.toJson(newMessage))
+  //      }
+  //    }, broadcast)
+  //  }
+
 }
