@@ -11,6 +11,8 @@ POST	/twiip						controllers.TwiipController.create
 # API
 GET		/api/twiips					controllers.api.TwiipApi.findAll
 GET		/api/twiips/:author			controllers.api.TwiipApi.findAllByAuthor(author)
+GET	    /api/twiips_latest_20		controllers.api.TwiipApi.findNLatest(n:Int = 20)
+GET	    /api/twiips_latest			controllers.api.TwiipApi.findNLatest(n:Int = 1)
 GET	    /api/twiip/:id				controllers.api.TwiipApi.findById(id)
 POST	/api/twiip					controllers.api.TwiipApi.createJson()
 

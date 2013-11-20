@@ -82,6 +82,10 @@ object Twiip {
   def findById(id: String): Future[Option[Twiip]] = {
     collection.find(BSONDocument("_id" -> BSONObjectID(id))).one[Twiip]
   }
+  
+  def findNLatest(n: Int): Future[List[Twiip]] = {
+    collection.find(BSONDocument()).sort(BSONDocument("created_at" -> -1)).options(QueryOpts().batchSize(n)).cursor[Twiip].collect[List](n)
+  }
 
   // ms
   def save(twiit: Twiip) = {
