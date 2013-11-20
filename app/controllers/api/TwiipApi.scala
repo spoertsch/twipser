@@ -14,7 +14,6 @@ import reactivemongo.bson.BSONObjectID
 import play.Logger
 import controllers.TwiipController
 
-
 case class MessageV2(author: String, message: String, createdOn: DateTime, id: String = BSONObjectID.generate.stringify)
 
 object TwiipApi extends Controller {
@@ -49,12 +48,14 @@ object TwiipApi extends Controller {
           }
           case Accepts.Xml() => {
             Ok(<twiips>
-                { twiips.map(t => <twiip>
-                						<author>{ t.author }</author>
-                						<text>{ t.message }</text>
-                						<createdAt>{ t.createdAtISO }</createdAt>
-                					</twiip>) }
-              </twiips>).as(XML)
+                 {
+                   twiips.map(t => <twiip>
+                                     <author>{ t.author }</author>
+                                     <text>{ t.message }</text>
+                                     <createdAt>{ t.createdAtISO }</createdAt>
+                                   </twiip>)
+                 }
+               </twiips>).as(XML)
           }
           case _ => NotAcceptable
 

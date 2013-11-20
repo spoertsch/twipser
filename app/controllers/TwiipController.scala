@@ -15,6 +15,10 @@ import play.api.mvc.WebSocket
 import play.api.libs.iteratee.Iteratee
 import play.api.libs.json.Json
 import play.api.Logger
+import play.api.libs.json.Writes
+import org.joda.time.LocalDateTime
+import play.api.libs.json.JsString
+import org.joda.time.format.ISODateTimeFormat
 
 object TwiipController extends Controller with MongoController {
 
@@ -48,7 +52,7 @@ object TwiipController extends Controller with MongoController {
           val newTwiip = Twiip(twiip._1, twiip._2)
           Twiip.save(newTwiip).map(lastError => {
             if (lastError.ok) {
-              channel.push(Json.toJson(newTwiip))
+              pushToFeed(newTwiip)
               Redirect(routes.TwiipController.createForm())
             } else {
               InternalServerError(lastError.message)
@@ -61,6 +65,10 @@ object TwiipController extends Controller with MongoController {
   //mcws1
   val (broadcast, channel) = Concurrent.broadcast[JsValue]
 
+  def pushToFeed(twiip: Twiip) = {
+    channel.push(Json.toJson(twiip))
+  }
+
   def feed = WebSocket.using[JsValue] { req =>
     (Iteratee.foreach { json =>
       Unit
@@ -70,11 +78,11 @@ object TwiipController extends Controller with MongoController {
   //mcws2
   //  def feed = WebSocket.using[JsValue] { req =>
   //    (Iteratee.foreach { json =>
-  //      val form = messageForm.bind(json)
+  //      val form = twiipForm.bind(json)
   //      if (!form.hasErrors) {
-  //        val newMessage = Message(form.get._1, form.get._2)
-  //        Message.save(newMessage)
-  //        channel.push(Json.toJson(newMessage))
+  //        val newTwiip = Twiip(form.get._1, form.get._2)
+  //        Twiip.save(newTwiip)
+  //        channel.push(Json.toJson(newTwiip))
   //      }
   //    }, broadcast)
   //  }

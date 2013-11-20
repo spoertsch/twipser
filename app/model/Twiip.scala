@@ -12,6 +12,7 @@ import org.joda.time.LocalDateTime
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import reactivemongo.api.QueryOpts
 
 case class Twiip(author: String,
   message: String,
@@ -66,7 +67,7 @@ object Twiip {
 
   // mfa1
   //  def findAll = {
-  //    collection.find(BSONDocument()).sort(BSONDocument("_id" -> -1)).cursor[Message].collect[List]() 
+  //    collection.find(BSONDocument()).sort(BSONDocument("created_at" -> -1)).options(QueryOpts().batchSize(10)).cursor[Message].collect[List]() 
   //  }
 
   // mfa2
@@ -75,7 +76,7 @@ object Twiip {
       case Some(author) => BSONDocument("author" -> author)
       case _ => BSONDocument()
     }
-    collection.find(query).sort(BSONDocument("_id" -> -1)).cursor[Twiip].collect[List]()
+    collection.find(query).sort(BSONDocument("created_at" -> -1)).options(QueryOpts().batchSize(10)).cursor[Twiip].collect[List]()
   }
 
   // ms
