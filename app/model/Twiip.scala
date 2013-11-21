@@ -46,9 +46,9 @@ object Twiip {
 
   def findAll: Future[List[Twiip]] = findAll(None)
 
-  //  def findAll = {
-  //    collection.find(BSONDocument()).sort(BSONDocument("created_at" -> -1)).options(QueryOpts().batchSize(10)).cursor[Message].collect[List]() 
-  //  }
+//    def findAll = {
+//      collection.find(BSONDocument()).sort(BSONDocument("created_at" -> -1)).options(QueryOpts().batchSize(10)).cursor[Message].collect[List]() 
+//    }
 
   def findAll(author: Option[String]) = {
     val query = author match {

@@ -64,15 +64,15 @@ object TwiipController extends Controller with MongoController {
     }, broadcast)
   }
 
-  //  def feed = WebSocket.using[JsValue] { req =>
-  //    (Iteratee.foreach { json =>
-  //      val form = twiipForm.bind(json)
-  //      if (!form.hasErrors) {
-  //        val newTwiip = Twiip(form.get._1, form.get._2)
-  //        Twiip.save(newTwiip)
-  //        channel.push(Json.toJson(newTwiip))
-  //      }
-  //    }, broadcast)
-  //  }
+//  def feed = WebSocket.using[JsValue] { req =>
+//    (Iteratee.foreach { json =>
+//      val form = twiipForm.bind(json)
+//      if (!form.hasErrors) {
+//        val newTwiip = Twiip(form.get._1, form.get._2)
+//        Twiip.save(newTwiip)
+//        channel.push(Json.toJson(newTwiip))
+//      }
+//    }, broadcast)
+//  }
 
 }

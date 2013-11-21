@@ -1,5 +1,3 @@
-import scala.concurrent.duration.DurationInt
-
 import actors.GenerateDummyTwiip
 import actors.MessageActor
 import akka.actor.Props
