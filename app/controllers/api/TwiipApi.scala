@@ -26,7 +26,20 @@ object TwiipApi extends Controller {
   def findAll() = Action.async {
     implicit req =>
       Twiip.findAll.map { twiips =>
-        Ok(Json.toJson(twiips)).as(JSON)
+        render {
+          case Accepts.Json() => {
+            Ok(Json.toJson(twiips)).as(JSON)
+          }
+          case Accepts.Xml() => {
+            Ok(<twiips>
+                 {
+                   twiips.map(t => mapTwiipToXml(t))
+                 }
+               </twiips>).as(XML)
+          }
+          case _ => NotAcceptable
+
+        }
       }
   }
 
