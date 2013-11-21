@@ -15,9 +15,15 @@ curl --request GET http://localhost:9000/api/twiips
 
 ##### Get all twiips by an author
 ```bash
-curl --header "Accept: application/json" --request GET http://localhost:9000/api/twiips/<author>
+curl --header "Accept: application/xml" --request GET http://localhost:9000/api/twiips
+curl --header "Accept: application/json" --request GET http://localhost:9000/api/twiips
+
 curl --header "Accept: application/xml" --request GET http://localhost:9000/api/twiips/<author>
+curl --header "Accept: application/json" --request GET http://localhost:9000/api/twiips/<author>
 curl --header "Accept: application/xml" --header "Accept-Encoding: gzip" --request GET http://localhost:9000/api/twiips/<author>
+
+curl --header "Accept: application/xml" --request GET http://localhost:9000/api/twiip/<id>
+curl --header "Accept: application/json" --request GET http://localhost:9000/api/twiip/<id>
 ```
 
 ##### Create new twiip
