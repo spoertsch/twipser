@@ -39,7 +39,5 @@ class IntegrationSpec extends PlaySpecification {
 	      browser.$(".error").getText() must contain("Maximum length is 120")
     }
     
-     
-    
   }
 }
