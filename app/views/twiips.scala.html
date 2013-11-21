@@ -7,7 +7,7 @@
 
 	<!-- mtf -->
 	<div class="container">
-		@form(routes.TwiipController.create) {
+		@form(routes.TwiipController.create, 'id -> "create-twiip-form") {
 			@inputText(twiipForm("author"), '_label -> Messages("message.author"))
 			@inputText(twiipForm("message"), '_label -> Messages("message.message"))	
 			<br />
