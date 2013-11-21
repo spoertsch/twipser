@@ -11,6 +11,7 @@ import play.api.libs.json.Json
 import play.api.libs.json.__
 import play.api.mvc.Action
 import play.api.mvc.Controller
+import model.TwiipImplicits._
 
 object TwiipApi extends Controller {
 

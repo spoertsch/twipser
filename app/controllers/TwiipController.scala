@@ -14,6 +14,7 @@ import play.api.mvc.Action
 import play.api.mvc.Controller
 import play.api.mvc.WebSocket
 import play.modules.reactivemongo.MongoController
+import model.TwiipImplicits._
 
 object TwiipController extends Controller with MongoController {
 
