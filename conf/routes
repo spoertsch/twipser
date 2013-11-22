@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /twiipsKnockout             controllers.TwiipController.getKnockedout
 
 GET		/twiips						controllers.TwiipController.createForm
 POST	/twiip						controllers.TwiipController.create

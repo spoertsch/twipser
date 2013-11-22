@@ -30,6 +30,11 @@ object TwiipController extends Controller with MongoController {
       }
   }
 
+  def getKnockedout = Action  {
+    Ok(views.html.twiipsKnockout(twiipForm))
+  }
+
+
   def create = Action.async {
     implicit request =>
       twiipForm.bindFromRequest.fold(

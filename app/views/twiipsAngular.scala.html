@@ -1,0 +1,48 @@
+@(twiipForm: Form[(String, String)], twiips: List[model.Twiip])(implicit lang: Lang)
+
+@import helper._
+@import viewhelper.ViewHelper._
+
+@main("twipser") {
+
+	<!-- mtf -->
+	<div class="container">
+		@form(routes.TwiipController.create, 'id -> "create-twiip-form") {
+			@inputText(twiipForm("author"), '_label -> Messages("message.author"))
+			@inputText(twiipForm("message"), '_label -> Messages("message.message"))	
+			<br />
+			<input class="btn btn-large" type="submit" value="@Messages("message.add")" />	
+		}
+	</div>
+	
+	<!-- mth -->
+	<div class="page-header">
+	  <h1>@Messages("messages")</h1>
+	</div>
+
+	<!-- mtl -->
+    <div id="all-twiips">
+
+        <blockquote ng-repeat="twiip in twiips">
+            <p>{{twiip.message}}</p>
+            <small>{{twiip.author}}</small>
+        </blockquote>
+    </div>
+
+
+    <script type="test/javascript">
+        function TaskListViewModel() {
+        // ... leave the existing code unchanged ...
+
+        // Load initial state from server, convert it to Task instances, then populate self.tasks
+        $.getJSON("/tasks", function(allData) {
+        var mappedTasks = $.map(allData, function(item) { return new Task(item) });
+        self.tasks(mappedTasks);
+        });
+        }
+
+    </script>
+
+    <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("angular.js"))'></script>
+
+}

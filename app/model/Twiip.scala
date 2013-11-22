@@ -55,7 +55,7 @@ object Twiip {
       case Some(author) => BSONDocument("author" -> author)
       case _ => BSONDocument()
     }
-    collection.find(query).sort(BSONDocument("created_at" -> -1)).options(QueryOpts().batchSize(10)).cursor[Twiip].collect[List]()
+    collection.find(query).sort(BSONDocument("created_at" -> -1)).cursor[Twiip].collect[List]()
   }
 
   def findById(id: String): Future[Option[Twiip]] = {
